@@ -1,0 +1,19 @@
+{
+    "name": "drupal-api/drupal-dspace",
+    "description": "Creates the link between Drupal and Dspace",
+    "type": "drupal-module",
+    "homepage": "https://gitlab.euraknos.cf/drupal-api/drupal-dspace",
+    "authors": [
+        {
+            "name": "Philip Verbist",
+            "email": "philip.verbist@gmail.com",
+            "homepage": "https://gitlab.euraknos.cf/drupal-api/drupal-dspace.git",
+            "role": "dev"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/drupal": ">=9"
+    }
+}
+
