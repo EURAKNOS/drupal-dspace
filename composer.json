@@ -13,7 +13,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "drupal/drupal": ">=9"
+        "drupal/drupal": ">=8"
     }
 }
 
