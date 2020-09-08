@@ -1,0 +1,7 @@
+dspace.content:
+  path: '/dspace'
+  defaults:
+    _controller: '\Drupal\drupal_dspace\Controller\DefaultController::content'
+    _title: 'Drupal DSpace'
+  requirements:
+    _permission: 'access content'

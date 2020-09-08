@@ -1,0 +1,6 @@
+name: Drupal DSpace
+description: Creates the link between Drupal and Dspace
+package: Custom
+type: module
+version: 0.0.1
+core: 9.x

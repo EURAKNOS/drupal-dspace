@@ -1,0 +1,6 @@
+dspace.admin:
+  title: 'DSpace module settings'
+  description: ''
+  parent: system.admin_config_development
+  route_name: dspace.content
+  weight: 100
