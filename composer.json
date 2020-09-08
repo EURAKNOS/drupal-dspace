@@ -11,9 +11,6 @@
             "role": "dev"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {
-        "drupal/drupal": ">=9"
-    }
+    "minimum-stability": "dev"
 }
 
