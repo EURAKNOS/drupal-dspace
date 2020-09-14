@@ -1,0 +1,364 @@
+<?php
+
+/**
+ * @file
+ * Allows using remote entities, for example through a REST interface.
+ */
+
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\drupal_dspace\DspaceEntityInterface;
+use Drupal\drupal_dspace\DspaceEntityStorageInterface;
+use Drupal\drupal_dspace\DspaceEntityTypeInterface;
+use Drupal\drupal_dspace\Plugin\Field\AnnotationTitleFieldItemList;
+
+/**
+ * Property indicating if the annotated Dspace entity should not be saved.
+ *
+ * When an annotation is saved the associated Dspace entity is saved as well.
+ * Sometimes this is undesired behavior and can therefor be prevent by setting
+ * this property on the annotation entity object before saving.
+ *
+ * @code
+ * $annotation->BYPASS_ANNOTATED_dspace_entity_SAVE = TRUE;
+ * // Save the annotation without triggering an Dspace entity save.
+ * $annotation->save();
+ * @endcode
+ *
+ * @see _drupal_dspace_process_annotation_changes()
+ * @see \Drupal\drupal_dspace\Form\DspaceEntityForm
+ *
+ * @internal
+ */
+define('drupal_dspace_BYPASS_ANNOTATED_dspace_entity_SAVE_PROPERTY', 'BYPASS_ANNOTATED_dspace_entity_SAVE');
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function drupal_dspace_entity_type_build(array &$entity_types) {
+  // Check for the dspace_entity_type config entity.
+  if (!empty($entity_types['dspace_entity_type'])) {
+    $dspace_entity_type_config = $entity_types['dspace_entity_type'];
+
+    // Get the existing Dspace entity type configurations.
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface[] $dspace_entity_types */
+    $dspace_entity_types = \Drupal::entityTypeManager()->createHandlerInstance(
+      $dspace_entity_type_config->getHandlerClass('storage'),
+      $dspace_entity_type_config
+    )->loadMultiple();
+
+    // Base definitions for each Dspace entity type.
+    $base_definition = [
+      'handlers' => [
+        'storage' => 'Drupal\drupal_dspace\DspaceEntityStorage',
+        'view_builder' => 'Drupal\Core\Entity\EntityViewBuilder',
+        'form' => [
+          'default' => 'Drupal\drupal_dspace\Form\DspaceEntityForm',
+          'edit' => 'Drupal\drupal_dspace\Form\DspaceEntityForm',
+          'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
+        ],
+        'list_builder' => 'Drupal\drupal_dspace\DspaceEntityListBuilder',
+        'access' => 'Drupal\drupal_dspace\DspaceEntityAccessControlHandler',
+        'route_provider' => [
+          'html' => 'Drupal\drupal_dspace\Routing\DspaceEntityHtmlRouteProvider',
+        ],
+      ],
+      'entity_keys' => [
+        'id' => 'id',
+        'uuid' => 'uuid',
+        'label' => 'title',
+      ],
+      'provider' => 'drupal_dspace',
+      'class' => 'Drupal\drupal_dspace\Entity\DspaceEntity',
+      'admin_permission' => 'administer Dspace entity types',
+      'group' => 'content',
+      'group_label' => t('Content'),
+    ];
+
+    // Add custom particular definitions for each Dspace entity type.
+    foreach ($dspace_entity_types as $dspace_entity_type) {
+      // Definitions for the entity type.
+      $definition = [
+        'id' => $dspace_entity_type->id(),
+        'label' => t($dspace_entity_type->getLabel()),
+        'label_plural' => t($dspace_entity_type->getPluralLabel()),
+        'label_collection' => t($dspace_entity_type->getPluralLabel()),
+        'links' => [
+          'collection' => "/{$dspace_entity_type->getBasePath()}",
+          'canonical' => "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}",
+        ],
+        'field_ui_base_route' => 'entity.dspace_entity_type.' . $dspace_entity_type->id() . '.edit_form',
+        'permission_granularity' => 'entity_type',
+        'persistent_cache' => (bool) $dspace_entity_type->getPersistentCacheMaxAge(),
+      ];
+
+      if (!$dspace_entity_type->isReadOnly() || $dspace_entity_type->isAnnotatable()) {
+        $definition['links']['add-form'] = "/{$dspace_entity_type->getBasePath()}/add";
+        $definition['links']['edit-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/edit";
+        $definition['links']['delete-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/delete";
+      }
+
+      // Merge the definitions.
+      $definition = array_merge($definition, $base_definition);
+      // Add the new content entity to the entity types.
+      $entity_types[$definition['id']] = new ContentEntityType($definition);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_operation().
+ *
+ * We need to generate Field UI operations (manage fields and displays) manually
+ * because the Field UI module only provides them for entity bundles, not entity
+ * types.
+ *
+ * @see field_ui_entity_operation()
+ */
+function drupal_dspace_entity_operation(EntityInterface $entity) {
+  $operations = [];
+
+  if ($entity instanceof DspaceEntityTypeInterface && \Drupal::service('module_handler')->moduleExists('field_ui')) {
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
+    $derived_entity_type = $entity->getDerivedEntityType();
+    $account = \Drupal::currentUser();
+    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' fields')) {
+      $operations['manage-fields'] = [
+        'title' => t('Manage fields'),
+        'weight' => 15,
+        'url' => Url::fromRoute("entity.{$derived_entity_type->id()}.field_ui_fields"),
+      ];
+    }
+    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' form display')) {
+      $operations['manage-form-display'] = [
+        'title' => t('Manage form display'),
+        'weight' => 20,
+        'url' => Url::fromRoute("entity.entity_form_display.{$derived_entity_type->id()}.default"),
+      ];
+    }
+    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' display')) {
+      $operations['manage-display'] = [
+        'title' => t('Manage display'),
+        'weight' => 25,
+        'url' => Url::fromRoute("entity.entity_view_display.{$derived_entity_type->id()}.default"),
+      ];
+    }
+  }
+
+  return $operations;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'field_storage_config_edit_form'.
+ *
+ * Replace the default cardinality form validation. Dspace entity field values
+ * reside in an external storage making the higher delta checks unnecessary.
+ */
+function drupal_dspace_form_field_storage_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!empty($form['cardinality_container']['#element_validate'])) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($form_state->get('entity_type_id'));
+    if ($entity_type && $entity_type->getProvider() === 'drupal_dspace') {
+      $key = array_search('::validateCardinality', $form['cardinality_container']['#element_validate']);
+      if ($key !== FALSE) {
+        $form['cardinality_container']['#element_validate'][$key] = 'drupal_dspace_field_storage_config_edit_form_validate_cardinality';
+      }
+    }
+  }
+}
+
+/**
+ * Validates the cardinality form for dspace entities.
+ *
+ * This validates a subset of what the core cardinality validation validates.
+ *
+ * @param array $element
+ *   The cardinality form render array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state.
+ *
+ * @see \Drupal\field_ui\Form\FieldStorageConfigEditForm::validateCardinality()
+ */
+function drupal_dspace_field_storage_config_edit_form_validate_cardinality(array &$element, FormStateInterface $form_state) {
+  if ($form_state->getValue('cardinality') === 'number' && !$form_state->getValue('cardinality_number')) {
+    $form_state->setError($element['cardinality_number'], t('Number of values is required.'));
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function drupal_dspace_inline_entity_form_entity_form_alter(&$entity_form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof EntityFormInterface) {
+    return;
+  }
+
+  /* @var \Drupal\Core\Entity\FieldableEntityInterface $annotation_entity */
+  $annotation_entity = $entity_form['#entity'];
+  $dspace_entity = $form_object->getEntity();
+  if ($annotation_entity->isNew() && $dspace_entity instanceof DspaceEntityInterface) {
+    $dspace_entity_type = $dspace_entity->getDspaceEntityType();
+    if ($dspace_entity_type->isAnnotatable()
+      && $entity_form['#entity_type'] === $dspace_entity_type->getAnnotationEntityTypeId()
+      && $entity_form['#bundle'] === $dspace_entity_type->getAnnotationBundleId()) {
+      // Automatically set the reference to the Dspace entity and hide the
+      // field altogether.
+      $annotation_reference_field_name = $dspace_entity_type->getAnnotationFieldName();
+      $annotation_entity->set($annotation_reference_field_name, $dspace_entity->id());
+      if (!empty($entity_form[$annotation_reference_field_name])) {
+        $entity_form[$annotation_reference_field_name]['#access'] = FALSE;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function drupal_dspace_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  $label_key = $entity_type->getKey('label');
+  if ($label_key && empty($fields[$label_key])) {
+    $count = Drupal::entityQuery('dspace_entity_type')
+      ->condition('annotation_entity_type_id', $entity_type->id())
+      ->condition('annotation_bundle_id', $bundle)
+      ->count()
+      ->execute();
+    if ($count) {
+      /* @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+      $base_field_definitions = call_user_func($entity_type->getClass() . '::baseFieldDefinitions', $entity_type);
+      if (!empty($base_field_definitions[$label_key])) {
+        $fields[$label_key] = clone $base_field_definitions[$label_key]
+          ->setName($label_key)
+          ->setTargetEntityTypeId($entity_type->id())
+          ->setTargetBundle($bundle)
+          ->setClass(AnnotationTitleFieldItemList::class)
+          ->setComputed(TRUE)
+          ->setReadOnly(TRUE)
+          ->setDisplayOptions('form', [
+            'region' => 'hidden',
+          ])
+          ->setDisplayConfigurable('form', FALSE);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function drupal_dspace_theme() {
+  return [
+    'dspace_entity' => [
+      'render element' => 'entity',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function drupal_dspace_theme_suggestions_dspace_entity(array $variables) {
+  $entity = $variables['entity']['#entity'];
+  $sanitized_view_mode = strtr($variables['entity']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'dspace_entity__' . $sanitized_view_mode;
+  $suggestions[] = 'dspace_entity__' . $entity->getEntityTypeId();
+  $suggestions[] = 'dspace_entity__' . $entity->getEntityTypeId() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'dspace_entity__' . $entity->getEntityTypeId() . '__' . $entity->bundle();
+  $suggestions[] = 'dspace_entity__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'dspace_entity__' . $entity->id();
+  $suggestions[] = 'dspace_entity__' . $entity->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function drupal_dspace_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity instanceof DspaceEntityInterface) {
+    $build['#theme'] = 'dspace_entity';
+    $build['#entity'] = $entity;
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function drupal_dspace_entity_insert(EntityInterface $entity) {
+  _drupal_dspace_save_annotated_dspace_entity($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function drupal_dspace_entity_update(EntityInterface $entity) {
+  _drupal_dspace_save_annotated_dspace_entity($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function drupal_dspace_entity_delete(EntityInterface $entity) {
+  _drupal_dspace_save_annotated_dspace_entity($entity);
+}
+
+/**
+ * Save the annotated Dspace entity.
+ *
+ * Saves the Dspace entity (if any) that the given entity is annotating.
+ *
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   An entity object.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _drupal_dspace_save_annotated_dspace_entity(EntityInterface $entity) {
+  if (!empty($entity->{drupal_dspace_BYPASS_ANNOTATED_dspace_entity_SAVE_PROPERTY})) {
+    return;
+  }
+
+  if (!$entity instanceof FieldableEntityInterface) {
+    return;
+  }
+
+  /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface[] $dspace_entity_types */
+  $dspace_entity_types = \Drupal::entityTypeManager()
+    ->getStorage('dspace_entity_type')
+    ->loadMultiple();
+  foreach ($dspace_entity_types as $dspace_entity_type) {
+    if (!$dspace_entity_type->isAnnotatable()
+      || $dspace_entity_type->getAnnotationEntityTypeId() !== $entity->getEntityTypeId()
+      || $dspace_entity_type->getAnnotationBundleId() !== $entity->bundle()
+      || $entity->get($dspace_entity_type->getAnnotationFieldName())->isEmpty()
+    ) {
+      continue;
+    }
+
+    /* @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
+    $referenced_entities = $entity
+      ->get($dspace_entity_type->getAnnotationFieldName())
+      ->referencedEntities();
+    foreach ($referenced_entities as $referenced_entity) {
+      if (!$referenced_entity instanceof DspaceEntityInterface) {
+        continue;
+      }
+
+      if (!empty($entity->original) && $dspace_entity_type->inheritsAnnotationFields()) {
+        $referenced_entity->original = clone $referenced_entity;
+        $referenced_entity->original->mapAnnotationFields($entity->original);
+      }
+      $referenced_entity->{DspaceEntityStorageInterface::BYPASS_STORAGE_CLIENT_SAVE_PROPERTY} = TRUE;
+      $referenced_entity->save();
+    }
+  }
+}

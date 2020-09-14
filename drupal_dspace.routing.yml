@@ -1,7 +1,34 @@
-dspace.content:
-  path: '/dspace'
+entity.dspace_entity_type.collection:
+  path: '/admin/structure/dspace-entity-types'
   defaults:
-    _controller: '\Drupal\drupal_dspace\Controller\DefaultController::content'
-    _title: 'Drupal DSpace'
+    _entity_list: 'dspace_entity_type'
+    _title: 'Dspace entity types'
   requirements:
-    _permission: 'access content'
+    _permission: 'administer Dspace entity types'
+
+entity.dspace_entity_type.add_form:
+  path: '/admin/structure/dspace-entity-types/add'
+  defaults:
+    _entity_form: 'dspace_entity_type.add'
+    _title: 'Add Dspace entity type'
+  requirements:
+    _permission: 'administer Dspace entity types'
+
+entity.dspace_entity_type.edit_form:
+  path: '/admin/structure/dspace-entity-types/{dspace_entity_type}'
+  defaults:
+    _entity_form: 'dspace_entity_type.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  requirements:
+    _permission: 'administer Dspace entity types'
+
+entity.dspace_entity_type.delete_form:
+  path: '/admin/structure/dspace-entity-types/{dspace_entity_type}/delete'
+  defaults:
+    _entity_form: 'dspace_entity_type.delete'
+    _title: 'Delete'
+  requirements:
+    _permission: 'administer Dspace entity types'
+
+route_callbacks:
+  - '\Drupal\drupal_dspace\Routing\DspaceEntityTypeRoutes::routes'

@@ -2,9 +2,9 @@
 
 /**
  * @file
- * Contains \Drupal\drupal_dspace\Entity\Dspace\DspaceContentEntityStorage.
+ * Contains \Drupal\drupal_dspace\DspaceContentEntityStorage.
  */
-namespace Drupal\drupal_dspace\Entity\Dspace;
+namespace Drupal\drupal_dspace;
 
 use Drupal\Core\Entity\ContentEntityStorageBase;
 

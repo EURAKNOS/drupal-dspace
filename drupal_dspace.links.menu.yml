@@ -1,0 +1,5 @@
+entity.dspace_entity_type.collection:
+  title: 'Dspace entity types'
+  parent: system.admin_structure
+  description: 'Create and manage fields, forms, and display settings for your Dspace entity types.'
+  route_name: entity.dspace_entity_type.collection

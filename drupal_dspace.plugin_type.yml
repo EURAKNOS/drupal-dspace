@@ -1,0 +1,4 @@
+drupal_dspace_storage_client:
+  label: dspace entities storage client
+  plugin_manager_service_id: plugin.manager.drupal_dspace.storage_client
+  plugin_definition_decorator_class: \Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

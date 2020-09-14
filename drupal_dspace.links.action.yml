@@ -1,0 +1,5 @@
+entity.dspace_entity_type.add_form:
+  route_name: 'entity.dspace_entity_type.add_form'
+  title: 'Add Dspace entity type'
+  appears_on:
+    - entity.dspace_entity_type.collection

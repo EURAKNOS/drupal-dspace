@@ -1,0 +1,18 @@
+services:
+  entity.query.external:
+    class: Drupal\drupal_dspace\Entity\Query\External\QueryFactory
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: backend_overridable }
+  drupal_dspace.response_decoder_factory:
+    class: Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactory
+    tags:
+      - { name: service_collector, tag: dspace_entity_response_decoder, call: addDecoder }
+  plugin.manager.drupal_dspace.storage_client:
+    class: Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientManager
+    parent: default_plugin_manager
+  route_processor_dspace_entity_type:
+    class: Drupal\drupal_dspace\RouteProcessor\RouteProcessorDspaceEntityType
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: route_processor_outbound }

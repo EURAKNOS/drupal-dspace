@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the drupal_dspace module.
+ */
+
+/**
+ * Create the database schema for Dspace entity types.
+ */
+function drupal_dspace_update_8201() {
+  // Prior to https://www.drupal.org/project/drupal_dspace/issues/3056426
+  // the database schema for Dspace entity types was not created. This update
+  // script creates the database schema for all existing Dspace entity types.
+  $dspace_entity_type_config = \Drupal::entityTypeManager()->getDefinition('dspace_entity_type');
+
+  $dspace_entity_types = \Drupal::entityTypeManager()->createHandlerInstance(
+    $dspace_entity_type_config->getHandlerClass('storage'),
+    $dspace_entity_type_config
+  )->loadMultiple();
+
+  foreach ($dspace_entity_types as $id => $entity_type) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($id);
+    \Drupal::service('entity_type.listener')
+      ->onEntityTypeCreate($entity_type);
+  }
+}
+
+/**
+ * Enable submodule for installations that were relying on it.
+ */
+function drupal_dspace_update_8202() {
+  \Drupal::service('module_installer')->install(['drupal_dspace_pathauto']);
+}
