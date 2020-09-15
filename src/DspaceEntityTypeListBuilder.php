@@ -16,7 +16,6 @@ class DspaceEntityTypeListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function load() {
-      die();
     $entity_query = $this->storage->getQuery();
     $entity_query->pager(50);
     $ids = $entity_query->execute();
