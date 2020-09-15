@@ -32,7 +32,7 @@ class DspaceEntityPermissions {
   /**
    * Builds a standard list of Dspace entity permissions for a given type.
    *
-   * @param \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type
+   * @param \Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type
    *   The Dspace entity type.
    *
    * @return array

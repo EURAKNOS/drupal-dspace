@@ -21,7 +21,7 @@ class Condition extends ConditionBase {
    * {@inheritdoc}
    */
   public function compile($query) {
-    /* @var \namespace Drupal\drupal_dspace\Entity\Query\External\Query $query */
+    /* @var \Drupal\drupal_dspace\Entity\Query\External\Query $query */
     // If this is not the top level condition group then the sql query is
     // added to the $conditionContainer object by this function itself. The
     // SQL query object is only necessary to pass to Query::addField() so it

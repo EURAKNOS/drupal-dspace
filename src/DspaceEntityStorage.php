@@ -51,7 +51,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
   /**
    * Storage client instance.
    *
-   * @var \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @var \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    */
   protected $storageClient;
 
@@ -170,11 +170,11 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
   /**
    * Gets the entity type definition.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface
    *   Entity type definition.
    */
   public function getEntityType() {
-    /* @var \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $entity_type */
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity_type */
     $entity_type = $this->entityType;
     return $entity_type;
   }
@@ -207,7 +207,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
 
     // Map annotation fields to annotatable dspace entities.
     foreach ($entities as $dspace_entity) {
-      /* @var \namespace Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
+      /* @var \Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
       if ($dspace_entity->getDspaceEntityType()->isAnnotatable()) {
         $dspace_entity->mapAnnotationFields();
       }
@@ -273,7 +273,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
    * @param array $data
    *   Associative array of storage results, keyed on the entity ID.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityInterface[]
+   * @return \Drupal\drupal_dspace\DspaceEntityInterface[]
    *   An array of entity objects implementing the DspaceEntityInterface.
    */
   protected function mapFromRawStorageData(array $data) {
@@ -429,7 +429,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
    * {@inheritdoc}
    */
   protected function doSave($id, EntityInterface $entity) {
-    /* @var \namespace Drupal\drupal_dspace\DspaceEntityInterface $entity */
+    /* @var \Drupal\drupal_dspace\DspaceEntityInterface $entity */
     $result = FALSE;
 
     $dspace_entity_type = $this->getDspaceEntityType();

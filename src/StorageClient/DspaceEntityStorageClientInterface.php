@@ -42,7 +42,7 @@ interface DspaceEntityStorageClientInterface extends PluginInspectionInterface, 
   /**
    * Saves the entity permanently.
    *
-   * @param \namespace Drupal\drupal_dspace\DspaceEntityInterface $entity
+   * @param \Drupal\drupal_dspace\DspaceEntityInterface $entity
    *   The entity to save.
    *
    * @return int
@@ -54,7 +54,7 @@ interface DspaceEntityStorageClientInterface extends PluginInspectionInterface, 
   /**
    * Deletes permanently saved entities.
    *
-   * @param \namespace Drupal\drupal_dspace\DspaceEntityInterface $entity
+   * @param \Drupal\drupal_dspace\DspaceEntityInterface $entity
    *   The Dspace entity object to delete.
    */
   public function delete(DspaceEntityInterface $entity);

@@ -108,7 +108,7 @@ class DspaceEntityAccessControlHandler extends EntityAccessControlHandler implem
   /**
    * Get the Dspace entity type this handler is running for.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface|bool
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface|bool
    *   The Dspace entity type config entity object, or FALSE if not found.
    */
   protected function getDspaceEntityType() {

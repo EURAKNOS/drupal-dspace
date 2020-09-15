@@ -11,7 +11,7 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
 /**
  * Factory class creating entity query objects for the Dsprace backend.
  *
- * @see \namespace Drupal\drupal_dspace\Entity\Query\External\Query
+ * @see \Drupal\drupal_dspace\Entity\Query\External\Query
  */
 class QueryFactory implements QueryFactoryInterface {
 

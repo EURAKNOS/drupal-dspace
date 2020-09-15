@@ -92,7 +92,7 @@ interface DspaceEntityTypeInterface extends ConfigEntityInterface {
   /**
    * Retrieves the storage client.
    *
-   * @return \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @return \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    *   This types storage client plugin.
    *
    * @throws \Exception

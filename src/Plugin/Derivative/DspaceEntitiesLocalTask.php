@@ -116,7 +116,7 @@ class DspaceEntitiesLocalTask extends DeriverBase implements ContainerDeriverInt
   /**
    * Gets all defined Dspace entity types.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface[]
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface[]
    *   All defined Dspace entity types.
    */
   protected function getDspaceEntityTypes() {

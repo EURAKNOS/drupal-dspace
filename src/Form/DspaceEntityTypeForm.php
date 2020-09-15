@@ -611,11 +611,11 @@ class DspaceEntityTypeForm extends EntityForm {
    *
    * The form entity which has been used for populating form element defaults.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface
    *   The current form entity.
    */
   public function getEntity() {
-    /* @var \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
     $entity = $this->entity;
     return $entity;
   }

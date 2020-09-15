@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityListBuilder;
 /**
  * Defines a class to build a listing of dspace entities.
  *
- * @see \namespace Drupal\drupal_dspace\Entity\DspaceEntity
+ * @see \Drupal\drupal_dspace\Entity\DspaceEntity
  */
 class DspaceEntityListBuilder extends EntityListBuilder {
 

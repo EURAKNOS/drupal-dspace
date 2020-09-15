@@ -13,7 +13,7 @@ class DspaceEntityExtractRawDataEvent extends Event {
   /**
    * The Dspace entity.
    *
-   * @var \namespace Drupal\drupal_dspace\DspaceEntityInterface
+   * @var \Drupal\drupal_dspace\DspaceEntityInterface
    */
   protected $entity;
 
@@ -27,7 +27,7 @@ class DspaceEntityExtractRawDataEvent extends Event {
   /**
    * Constructs a map raw data event object.
    *
-   * @param \namespace Drupal\drupal_dspace\DspaceEntityInterface $entity
+   * @param \Drupal\drupal_dspace\DspaceEntityInterface $entity
    *   The Dspace entity.
    * @param array $raw_data
    *   The raw data being mapped.
@@ -40,7 +40,7 @@ class DspaceEntityExtractRawDataEvent extends Event {
   /**
    * Gets the Dspace entity.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityInterface
    *   The Dspace entity.
    */
   public function getEntity() {

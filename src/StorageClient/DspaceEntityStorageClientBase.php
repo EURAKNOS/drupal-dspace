@@ -26,14 +26,14 @@ abstract class DspaceEntityStorageClientBase extends PluginBase implements Dspac
   /**
    * The Dspace entity type this storage client is configured for.
    *
-   * @var \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @var \Drupal\drupal_dspace\DspaceEntityTypeInterface
    */
   protected $DspaceEntityType;
 
   /**
    * The response decoder factory.
    *
-   * @var \namespace Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface
+   * @var \Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface
    */
   protected $responseDecoderFactory;
 
@@ -48,7 +48,7 @@ abstract class DspaceEntityStorageClientBase extends PluginBase implements Dspac
    *   The plugin implementation definition.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \namespace Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
+   * @param \Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
    *   The response decoder factory service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TranslationInterface $string_translation, ResponseDecoderFactoryInterface $response_decoder_factory) {
@@ -94,7 +94,7 @@ abstract class DspaceEntityStorageClientBase extends PluginBase implements Dspac
   /**
    * Returns the response decoder factory.
    *
-   * @return \namespace Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface
+   * @return \Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface
    *   The response decoder factory.
    */
   public function getResponseDecoderFactory() {
@@ -104,7 +104,7 @@ abstract class DspaceEntityStorageClientBase extends PluginBase implements Dspac
   /**
    * Sets the response decoder factory.
    *
-   * @param \namespace Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
+   * @param \Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
    *   A response decoder factory.
    *
    * @return $this

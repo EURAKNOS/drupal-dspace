@@ -43,7 +43,7 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
    *   The plugin implementation definition.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \namespace Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
+   * @param \Drupal\drupal_dspace\ResponseDecoder\ResponseDecoderFactoryInterface $response_decoder_factory
    *   The response decoder factory service.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   A Guzzle client object.

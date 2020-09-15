@@ -13,11 +13,11 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  *   id = "dspace_entity_type",
  *   label = @Translation("Dspace entity type"),
  *   handlers = {
- *     "list_builder" = "namespace Drupal\drupal_dspace\DspaceEntityTypeListBuilder",
+ *     "list_builder" = "Drupal\drupal_dspace\DspaceEntityTypeListBuilder",
  *     "form" = {
- *       "add" = "namespace Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
- *       "edit" = "namespace Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
- *       "delete" = "namespace Drupal\drupal_dspace\Form\DspaceEntityTypeDeleteForm",
+ *       "add" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
+ *       "edit" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
+ *       "delete" = "Drupal\drupal_dspace\Form\DspaceEntityTypeDeleteForm",
  *     }
  *   },
  *   config_prefix = "dspace_entity_type",
@@ -98,7 +98,7 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
   /**
    * The storage client plugin instance.
    *
-   * @var \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @var \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    */
   protected $storageClientPlugin;
 

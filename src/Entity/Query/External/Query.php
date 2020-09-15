@@ -29,7 +29,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Storage client instance.
    *
-   * @var \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @var \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    */
   protected $storageClient;
 
@@ -108,7 +108,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Get the storage client for a bundle.
    *
-   * @return \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @return \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    *   The Dspace entity storage client.
    */
   protected function getStorageClient() {
@@ -140,7 +140,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Gets the Dspace entity type.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface
    *   The Dspace entity type.
    */
   public function getDspaceEntityType() {

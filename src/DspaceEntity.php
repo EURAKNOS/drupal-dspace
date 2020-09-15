@@ -78,7 +78,7 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
 
-    /* @var \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type */
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type */
     $dspace_entity_type = \Drupal::entityTypeManager()
       ->getStorage('dspace_entity_type')
       ->load($entity_type->id());
@@ -239,7 +239,7 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
   /**
    * Gets the fields that can be inherited by the Dspace entity.
    *
-   * @param \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $type
+   * @param \Drupal\drupal_dspace\DspaceEntityTypeInterface $type
    *   The type of the Dspace entity.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]

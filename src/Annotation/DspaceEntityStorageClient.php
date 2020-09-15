@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an Dspace entity storage client annotation object.
  *
- * @see \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientManager
+ * @see \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientManager
  * @see plugin_api
  *
  * @Annotation

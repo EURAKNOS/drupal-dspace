@@ -19,7 +19,7 @@ class DspaceEntityForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /** @var \namespace Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
+    /** @var \Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
     $dspace_entity = $this->entity;
 
     if ($this->operation == 'edit') {
@@ -44,7 +44,7 @@ class DspaceEntityForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /** @var \namespace Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
+    /** @var \Drupal\drupal_dspace\DspaceEntityInterface $dspace_entity */
     $dspace_entity = $this->entity;
 
     // When saving an Dspace entity with annotation through an inline entity

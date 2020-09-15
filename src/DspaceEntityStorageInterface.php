@@ -25,7 +25,7 @@ interface DspaceEntityStorageInterface extends ContentEntityStorageInterface {
    * $dspace_entity->save();
    * @endcode
    *
-   * @see \namespace Drupal\drupal_dspace\DspaceEntityStorage::doSaveFieldItems()
+   * @see \Drupal\drupal_dspace\DspaceEntityStorage::doSaveFieldItems()
    *
    * @internal
    *
@@ -36,7 +36,7 @@ interface DspaceEntityStorageInterface extends ContentEntityStorageInterface {
   /**
    * Get the storage client.
    *
-   * @return \namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
+   * @return \Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface
    *   The Dspace entity storage client.
    */
   public function getStorageClient();
@@ -44,7 +44,7 @@ interface DspaceEntityStorageInterface extends ContentEntityStorageInterface {
   /**
    * Gets the Dspace entity type.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface
    *   The Dspace entity type.
    */
   public function getDspaceEntityType();

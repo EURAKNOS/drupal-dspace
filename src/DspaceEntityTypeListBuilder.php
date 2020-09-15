@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityListBuilder;
 /**
  * Defines a class to build a listing of Dspace entity types.
  *
- * @see \namespace Drupal\drupal_dspace\Entity\DspaceEntityType
+ * @see \Drupal\drupal_dspace\Entity\DspaceEntityType
  */
 class DspaceEntityTypeListBuilder extends EntityListBuilder {
 
@@ -37,7 +37,7 @@ class DspaceEntityTypeListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
+    /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
     $row['label'] = $entity->label();
     $row['description'] = $entity->getDescription();
     $row['operations']['data'] = $this->buildOperations($entity);

@@ -22,7 +22,7 @@ interface DspaceEntityInterface extends ContentEntityInterface {
   /**
    * Gets the Dspace entity type.
    *
-   * @return \namespace Drupal\drupal_dspace\DspaceEntityTypeInterface
+   * @return \Drupal\drupal_dspace\DspaceEntityTypeInterface
    *   The Dspace entity type.
    */
   public function getDspaceEntityType();
