@@ -14,6 +14,7 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  *   label = @Translation("Dspace entity type"),
  *   handlers = {
  *     "list_builder" = "Drupal\drupal_dspace\DspaceEntityTypeListBuilder",
+ *     "storage" = "Drupal\drupal_dspace\Config\Entity\ConfigEntityStorage",
  *     "form" = {
  *       "add" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
  *       "edit" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",

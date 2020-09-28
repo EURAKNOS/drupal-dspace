@@ -86,9 +86,9 @@ function drupal_dspace_entity_type_build(array &$entity_types) {
       // Definitions for the entity type.
       $definition = [
         'id' => $dspace_entity_type->id(),
-        'label' => t($dspace_entity_type->getLabel()),
-        'label_plural' => t($dspace_entity_type->getPluralLabel()),
-        'label_collection' => t($dspace_entity_type->getPluralLabel()),
+        'label' => t((string)$dspace_entity_type->getLabel()),
+        'label_plural' => t((string)$dspace_entity_type->getPluralLabel()),
+        'label_collection' => t((string)$dspace_entity_type->getPluralLabel()),
         'links' => [
           'collection' => "/{$dspace_entity_type->getBasePath()}",
           'canonical' => "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}",
@@ -223,30 +223,30 @@ function drupal_dspace_inline_entity_form_entity_form_alter(&$entity_form, FormS
  */
 function drupal_dspace_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
   $label_key = $entity_type->getKey('label');
-  if ($label_key && empty($fields[$label_key])) {
-    $count = Drupal::entityQuery('dspace_entity_type')
-      ->condition('annotation_entity_type_id', $entity_type->id())
-      ->condition('annotation_bundle_id', $bundle)
-      ->count()
-      ->execute();
-    if ($count) {
-      /* @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
-      $base_field_definitions = call_user_func($entity_type->getClass() . '::baseFieldDefinitions', $entity_type);
-      if (!empty($base_field_definitions[$label_key])) {
-        $fields[$label_key] = clone $base_field_definitions[$label_key]
-          ->setName($label_key)
-          ->setTargetEntityTypeId($entity_type->id())
-          ->setTargetBundle($bundle)
-          ->setClass(AnnotationTitleFieldItemList::class)
-          ->setComputed(TRUE)
-          ->setReadOnly(TRUE)
-          ->setDisplayOptions('form', [
-            'region' => 'hidden',
-          ])
-          ->setDisplayConfigurable('form', FALSE);
-      }
-    }
-  }
+//  if ($label_key && empty($fields[$label_key])) {
+//    $count = Drupal::entityQuery('dspace_entity_type')
+//      ->condition('annotation_entity_type_id', $entity_type->id())
+//      ->condition('annotation_bundle_id', $bundle)
+//      ->count()
+//      ->execute();
+//    if ($count) {
+//      /* @var \Drupal\Core\Field\BaseFieldDefinition[] $base_field_definitions */
+//      $base_field_definitions = call_user_func($entity_type->getClass() . '::baseFieldDefinitions', $entity_type);
+//      if (!empty($base_field_definitions[$label_key])) {
+//        $fields[$label_key] = clone $base_field_definitions[$label_key]
+//          ->setName($label_key)
+//          ->setTargetEntityTypeId($entity_type->id())
+//          ->setTargetBundle($bundle)
+//          ->setClass(AnnotationTitleFieldItemList::class)
+//          ->setComputed(TRUE)
+//          ->setReadOnly(TRUE)
+//          ->setDisplayOptions('form', [
+//            'region' => 'hidden',
+//          ])
+//          ->setDisplayConfigurable('form', FALSE);
+//      }
+//    }
+//  }
 }
 
 /**

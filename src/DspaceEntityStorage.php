@@ -138,7 +138,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
     $this->eventDispatcher = $event_dispatcher;
     $this->dateFormatter = $date_formatter;
   }
-
+                  
   /**
    * {@inheritdoc}
    */
@@ -389,6 +389,13 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
   /**
    * {@inheritdoc}
    */
+  protected function doLoadMultipleRevisionsFieldItems($revision_ids) {
+    return [];
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   protected function setPersistentCache($entities) {
     if (!$this->entityType->isPersistentlyCacheable()) {
       return;
@@ -465,7 +472,7 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
    * {@inheritdoc}
    */
   protected function getQueryServiceName() {
-    return 'entity.query.external';
+    return 'entity.query.dspace';
   }
 
   /**

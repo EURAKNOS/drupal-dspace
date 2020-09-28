@@ -1,6 +1,11 @@
 services:
-  entity.query.external:
+  entity.query.dspace:
     class: Drupal\drupal_dspace\Entity\Query\External\QueryFactory
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: backend_overridable }
+  entity.query.dspace.config:
+    class: Drupal\drupal_dspace\Config\Entity\Query\External\QueryFactory
     arguments: ['@entity_type.manager']
     tags:
       - { name: backend_overridable }

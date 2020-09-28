@@ -27,11 +27,10 @@ class DspaceEntityStorageClientManager extends DefaultPluginManager {
       'Plugin/DspaceEntities/StorageClient',
       $namespaces,
       $module_handler,
-      'namespace Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface',
-      'namespace Drupal\drupal_dspace\Annotation\DspaceEntityStorageClient'
+      'Drupal\drupal_dspace\StorageClient\DspaceEntityStorageClientInterface',
+      'Drupal\drupal_dspace\Annotation\DspaceEntityStorageClient'
     );
     $this->alterInfo('dspace_entity_storage_client_info');
     $this->setCacheBackend($cache_backend, 'dspace_entity_storage_client', ['dspace_entity_storage_client']);
   }
-
 }

@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * dspace entities storage client based on a REST API.
  *
  * @DspaceEntityStorageClient(
- *   id = "rest",
+ *   id = "dspace_rest_type_storage_client",
  *   label = @Translation("REST"),
  *   description = @Translation("Retrieves dspace entities from a REST API.")
  * )
@@ -75,7 +75,7 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
       'endpoint' => NULL,
       'response_format' => NULL,
       'pager' => [
-        'default_limit' => 50,
+        'default_limit' => 20,
         'page_parameter' => NULL,
         'page_parameter_type' => NULL,
         'page_size_parameter' => NULL,
@@ -290,7 +290,7 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     );
 
     $body = $response->getBody();
-
+    
     return $this
       ->getResponseDecoderFactory()
       ->getDecoder($this->configuration['response_format'])
