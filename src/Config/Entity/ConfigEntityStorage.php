@@ -222,7 +222,7 @@ implements DspaceConfigEntityStorageInterface
       $data = $this
         ->getStorageClient()
         ->loadMultiple($ids);
-
+      
       // Map the data into entity objects and according fields.
       if ($data) {
         $entities = $this->mapFromRawStorageData($data);
@@ -232,7 +232,9 @@ implements DspaceConfigEntityStorageInterface
     return $entities;
   }
   
-  
+  public function load($id) {
+      return $this->loadMultiple([$id])[0];
+  }
   
   
   /**
@@ -255,11 +257,11 @@ implements DspaceConfigEntityStorageInterface
     $values = [];
     foreach ($data as $id => $raw_data) {
       $values[$id] = [
-          'id' => substr($raw_data['id'],1,8),
-          'label' => $raw_data['label'],
-          'label_plural' => $raw_data['label'],
-          'description' => $raw_data['label'],
-          '$read_only' => true,
+          'id' => substr($raw_data['id'],0,8),
+          'label' => $raw_data['name'],
+          'label_plural' => $raw_data['name'],
+          'description' => $raw_data['name'],
+          'read_only' => true,
       ];
 
 //      foreach ($this->getDspaceEntityType()->getFieldMappings() as $field_name => $properties) {
@@ -354,7 +356,10 @@ implements DspaceConfigEntityStorageInterface
 //      $this->eventDispatcher->dispatch(DspaceEntitiesEvents::MAP_RAW_DATA, $event);
 
 //      $entities[$id] = new $this->entityClass($event->getEntityValues(), $this->entityTypeId);
-//        $entity_values['storageClientPlugin']=$this->storageClient;
+
+        $entity_values['storage_client_id']=$this->storage_client_id;
+        $entity_values['storageClientPlugin']=$this->storageClient;
+
       $entities[$id] = new DspaceEntityType($entity_values, $this->entityTypeId);
       $entities[$id]->enforceIsNew(FALSE);
 //      $entities[$id]->setStorageClientPlugin($this->getStorageClient());

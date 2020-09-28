@@ -54,17 +54,27 @@ class RestTypes extends Rest  {
    */
   public function loadMultiple(array $ids = NULL) {
     $data = [];
-
     $response = $this->httpClient->request(
       'GET',
       $this->configuration['endpoint'],
       [
-        'headers' => $this->getHttpHeaders(),
+        'headers' => array_merge($this->getHttpHeaders(), $this->authenticate()),
         'query' => $this->getSingleQueryParameters($id),
       ]
     );
-
     $body = $response->getBody();
+
+    $data = json_decode($body,true)['_embedded']['collections'];
+    
+    if(is_array($ids)) {
+        array_filter(
+                $data, 
+                function($item) use ($ids) {
+                    return in_array(substr($item['id'],0,8),$ids)?true:false;
+                }
+            );
+    }
+    
     return json_decode($body,true)['_embedded']['collections'];
     return $this
       ->getResponseDecoderFactory()
@@ -80,5 +90,27 @@ class RestTypes extends Rest  {
 //    }
 //
 //    return $data;
+  }
+  
+  
+  public function authenticate() {
+      $response = $this->httpClient->request(
+      'POST',
+      'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
+      [
+        'headers' => $this->getHttpHeaders(),
+        'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
+      ]
+    );
+      return $response->getHeaders()['Authorization'][0];
+      //$this->setHttpHeaders(array_merge($this->getHttpHeaders(),$response->getHeaders()['Authorization']));
+      $bearer = $response->getHeaders()['Authorization'][0];
+      return ['Authorization' => $bearer];
+    $body = $response->getBody();
+    return json_decode($body,true)['_embedded']['collections'];
+    return $this
+      ->getResponseDecoderFactory()
+      ->getDecoder($this->configuration['response_format'])
+      ->decode($body);
   }
 }

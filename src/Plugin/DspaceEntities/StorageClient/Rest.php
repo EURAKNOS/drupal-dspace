@@ -341,12 +341,14 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     );
 
     $body = $response->getBody() . '';
+    
+//    $results = $this
+//      ->getResponseDecoderFactory()
+//      ->getDecoder($this->configuration['response_format'])
+//      ->decode($body);
 
-    $results = $this
-      ->getResponseDecoderFactory()
-      ->getDecoder($this->configuration['response_format'])
-      ->decode($body);
-
+    $results = json_decode($body, true);
+    
     return $results;
   }
 

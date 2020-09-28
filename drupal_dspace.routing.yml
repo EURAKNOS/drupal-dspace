@@ -6,13 +6,13 @@ entity.dspace_entity_type.collection:
   requirements:
     _permission: 'administer Dspace entity types'
 
-entity.dspace_entity_type.add_form:
-  path: '/admin/structure/dspace-entity-types/add'
-  defaults:
-    _entity_form: 'dspace_entity_type.add'
-    _title: 'Add Dspace entity type'
-  requirements:
-    _permission: 'administer Dspace entity types'
+#entity.dspace_entity_type.add_form:
+#  path: '/admin/structure/dspace-entity-types/add'
+#  defaults:
+#    _entity_form: 'dspace_entity_type.add'
+#    _title: 'Add Dspace entity type'
+#  requirements:
+#    _permission: 'administer Dspace entity types'
 
 entity.dspace_entity_type.edit_form:
   path: '/admin/structure/dspace-entity-types/{dspace_entity_type}'

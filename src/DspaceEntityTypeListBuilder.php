@@ -19,7 +19,8 @@ class DspaceEntityTypeListBuilder extends EntityListBuilder {
     $entity_query = $this->storage->getQuery();
     $entity_query->pager(50);
     $ids = $entity_query->execute();
-    return $this->storage->loadMultiple($ids);
+
+    return $this->storage->loadMultiple();
   }
 
   /**
