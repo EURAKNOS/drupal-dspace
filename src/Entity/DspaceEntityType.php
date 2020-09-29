@@ -16,8 +16,6 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  *     "list_builder" = "Drupal\drupal_dspace\DspaceEntityTypeListBuilder",
  *     "storage" = "Drupal\drupal_dspace\Config\Entity\ConfigEntityStorage",
  *     "form" = {
- *       "add" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
- *       "edit" = "Drupal\drupal_dspace\Form\DspaceEntityTypeForm",
  *       "delete" = "Drupal\drupal_dspace\Form\DspaceEntityTypeDeleteForm",
  *     }
  *   },
@@ -28,8 +26,6 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  *     "label" = "label",
  *   },
  *   links = {
- *     "edit-form" = "/admin/structure/dspace-entity-types/{dspace_entity_type}",
- *     "delete-form" = "/admin/structure/dspace-entity-types/{dspace_entity_type}/delete",
  *   }
  * )
  */

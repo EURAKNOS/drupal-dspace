@@ -60,8 +60,8 @@ function drupal_dspace_entity_type_build(array &$entity_types) {
         'view_builder' => 'Drupal\Core\Entity\EntityViewBuilder',
         'form' => [
           'default' => 'Drupal\drupal_dspace\Form\DspaceEntityForm',
-          'edit' => 'Drupal\drupal_dspace\Form\DspaceEntityForm',
-          'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
+//          'edit' => 'Drupal\drupal_dspace\Form\DspaceEntityForm',
+//          'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
         ],
         'list_builder' => 'Drupal\drupal_dspace\DspaceEntityListBuilder',
         'access' => 'Drupal\drupal_dspace\DspaceEntityAccessControlHandler',
@@ -93,15 +93,15 @@ function drupal_dspace_entity_type_build(array &$entity_types) {
           'collection' => "/{$dspace_entity_type->getBasePath()}",
           'canonical' => "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}",
         ],
-        'field_ui_base_route' => 'entity.dspace_entity_type.' . $dspace_entity_type->id() . '.edit_form',
+//        'field_ui_base_route' => 'entity.dspace_entity_type.' . $dspace_entity_type->id() . '.edit_form',
         'permission_granularity' => 'entity_type',
         'persistent_cache' => (bool) $dspace_entity_type->getPersistentCacheMaxAge(),
       ];
 
       if (!$dspace_entity_type->isReadOnly() || $dspace_entity_type->isAnnotatable()) {
         $definition['links']['add-form'] = "/{$dspace_entity_type->getBasePath()}/add";
-        $definition['links']['edit-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/edit";
-        $definition['links']['delete-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/delete";
+//        $definition['links']['edit-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/edit";
+//        $definition['links']['delete-form'] = "/{$dspace_entity_type->getBasePath()}/{{$dspace_entity_type->id()}}/delete";
       }
 
       // Merge the definitions.

@@ -66,19 +66,19 @@ class DspaceEntitiesLocalTask extends DeriverBase implements ContainerDeriverInt
 
     foreach ($this->getDspaceEntityTypes() as $entity_type_id => $entity_type) {
       // Dspace entity type edit tab.
-      $this->derivatives[$entity_type_id . '_settings_tab'] = [
-        'route_name' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
-        'title' => $this->t('Edit'),
-        'base_route' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
-      ];
-
-      // Dspace entity type delete tab.
-      $this->derivatives[$entity_type_id . '_delete_tab'] = [
-        'route_name' => 'entity.dspace_entity_type.' . $entity_type_id . '.delete_form',
-        'title' => $this->t('Delete'),
-        'base_route' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
-        'weight' => 10,
-      ];
+//      $this->derivatives[$entity_type_id . '_settings_tab'] = [
+//        'route_name' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
+//        'title' => $this->t('Edit'),
+//        'base_route' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
+//      ];
+//
+//      // Dspace entity type delete tab.
+//      $this->derivatives[$entity_type_id . '_delete_tab'] = [
+//        'route_name' => 'entity.dspace_entity_type.' . $entity_type_id . '.delete_form',
+//        'title' => $this->t('Delete'),
+//        'base_route' => 'entity.dspace_entity_type.' . $entity_type_id . '.edit_form',
+//        'weight' => 10,
+//      ];
 
       // Dspace entity view tab.
       $this->derivatives['entity.' . $entity_type_id . '.canonical'] = [
@@ -88,22 +88,22 @@ class DspaceEntitiesLocalTask extends DeriverBase implements ContainerDeriverInt
       ];
 
       // Dspace entity edit tab.
-      if ($entity_type->getDerivedEntityType()->hasLinkTemplate('edit-form')) {
-        $this->derivatives['entity.' . $entity_type_id . '.edit_form'] = [
-          'route_name' => 'entity.' . $entity_type_id . '.edit_form',
-          'title' => $this->t('Edit'),
-          'base_route' => 'entity.' . $entity_type_id . '.canonical',
-        ];
-      }
-
-      // Dspace entity delete tab.
-      if ($entity_type->getDerivedEntityType()->hasLinkTemplate('delete-form')) {
-        $this->derivatives['entity.' . $entity_type_id . '.delete_form'] = [
-          'route_name' => 'entity.' . $entity_type_id . '.delete_form',
-          'title' => $this->t('Delete'),
-          'base_route' => 'entity.' . $entity_type_id . '.canonical',
-        ];
-      }
+//      if ($entity_type->getDerivedEntityType()->hasLinkTemplate('edit-form')) {
+//        $this->derivatives['entity.' . $entity_type_id . '.edit_form'] = [
+//          'route_name' => 'entity.' . $entity_type_id . '.edit_form',
+//          'title' => $this->t('Edit'),
+//          'base_route' => 'entity.' . $entity_type_id . '.canonical',
+//        ];
+//      }
+//
+//      // Dspace entity delete tab.
+//      if ($entity_type->getDerivedEntityType()->hasLinkTemplate('delete-form')) {
+//        $this->derivatives['entity.' . $entity_type_id . '.delete_form'] = [
+//          'route_name' => 'entity.' . $entity_type_id . '.delete_form',
+//          'title' => $this->t('Delete'),
+//          'base_route' => 'entity.' . $entity_type_id . '.canonical',
+//        ];
+//      }
     }
 
     foreach ($this->derivatives as &$entry) {

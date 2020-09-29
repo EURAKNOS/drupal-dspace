@@ -50,21 +50,21 @@ class DspaceEntityTypeRoutes implements ContainerInjectionInterface {
 
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->getProvider() === 'drupal_dspace') {
-        // Edit page.
-        $route = new Route('/admin/structure/dspace-entity-types/' . $entity_type_id);
-        $route->setDefault('_entity_form', 'dspace_entity_type.edit');
-        $route->setDefault('_title_callback', '\Drupal\Core\Entity\Controller\EntityController::title');
-        $route->setDefault('dspace_entity_type', $entity_type_id);
-        $route->setRequirement('_permission', 'administer Dspace entity types');
-        $collection->add('entity.dspace_entity_type.' . $entity_type_id . '.edit_form', $route);
+//        // Edit page.
+//        $route = new Route('/admin/structure/dspace-entity-types/' . $entity_type_id);
+//        $route->setDefault('_entity_form', 'dspace_entity_type.edit');
+//        $route->setDefault('_title_callback', '\Drupal\Core\Entity\Controller\EntityController::title');
+//        $route->setDefault('dspace_entity_type', $entity_type_id);
+//        $route->setRequirement('_permission', 'administer Dspace entity types');
+//        $collection->add('entity.dspace_entity_type.' . $entity_type_id . '.edit_form', $route);
 
-        // Delete page.
-        $route = new Route('/admin/structure/dspace-entity-types/' . $entity_type_id . '/delete');
-        $route->setDefault('_entity_form', 'dspace_entity_type.delete');
-        $route->setDefault('_title', 'Delete');
-        $route->setDefault('dspace_entity_type', $entity_type_id);
-        $route->setRequirement('_permission', 'administer Dspace entity types');
-        $collection->add('entity.dspace_entity_type.' . $entity_type_id . '.delete_form', $route);
+//        // Delete page.
+//        $route = new Route('/admin/structure/dspace-entity-types/' . $entity_type_id . '/delete');
+//        $route->setDefault('_entity_form', 'dspace_entity_type.delete');
+//        $route->setDefault('_title', 'Delete');
+//        $route->setDefault('dspace_entity_type', $entity_type_id);
+//        $route->setRequirement('_permission', 'administer Dspace entity types');
+//        $collection->add('entity.dspace_entity_type.' . $entity_type_id . '.delete_form', $route);
       }
     }
 
