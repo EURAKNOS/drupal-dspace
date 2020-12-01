@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @DspaceEntityStorageClient(
  *   id = "dspace_rest_type_storage_client",
  *   label = @Translation("REST"),
- *   description = @Translation("Retrieves dspace entities from a REST API.")
+ *   description = @Translation("Retrieves dspace entity types from a REST API.")
  * )
  */
 class RestTypes extends Rest  {
@@ -27,7 +27,8 @@ class RestTypes extends Rest  {
    */
   public function defaultConfiguration() {
     return [
-      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/collection",
+      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/metadataschemas?size=1000",
+//      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/collection",
       'response_format' => 'Json',
       'pager' => [
         'default_limit' => 20,
@@ -64,18 +65,36 @@ class RestTypes extends Rest  {
     );
     $body = $response->getBody();
 
-    $data = json_decode($body,true)['_embedded']['collections'];
-    
-    if(is_array($ids)) {
-        array_filter(
-                $data, 
-                function($item) use ($ids) {
-                    return in_array(substr($item['id'],0,8),$ids)?true:false;
-                }
-            );
+    $decoded = json_decode($body,true);
+    $data = $decoded['_embedded']['metadataschemas'];
+    if(isset($decoded['page']) && isset($decoded['page']['totalPages'])) {
+        for($i=1; $i<$decoded['page']['totalPages']; $i++) {
+            $response = $this->httpClient->request(
+                'GET',
+                $this->configuration['endpoint'],
+                [
+//                  'headers' => array_merge($this->getHttpHeaders(), $this->authenticate()),
+                  'headers' => array_merge($this->getHttpHeaders(), ['Authorization' => $this->authenticate()]),
+                  'query' => $this->getSingleQueryParameters(['page' => $i]),
+                ]
+              );
+              $body = $response->getBody();
+            $data=$data+json_decode($body,true)['_embedded']['metadataschemas'];
+        }
     }
     
-    return json_decode($body,true)['_embedded']['collections'];
+    
+//    if(is_array($ids)) {
+//        array_filter(
+//                $data, 
+//                function($item) use ($ids) {
+//                    return in_array(substr($item['id'],0,8),$ids)?true:false;
+//                }
+//            );
+//    }
+    return $data;
+    
+    return json_decode($body,true)['_embedded']['metadataschemas'];
     return $this
       ->getResponseDecoderFactory()
       ->getDecoder($this->configuration['response_format'])
@@ -93,24 +112,24 @@ class RestTypes extends Rest  {
   }
   
   
-  public function authenticate() {
-      $response = $this->httpClient->request(
-      'POST',
-      'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
-      [
-        'headers' => $this->getHttpHeaders(),
-        'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
-      ]
-    );
-      return $response->getHeaders()['Authorization'][0];
-      //$this->setHttpHeaders(array_merge($this->getHttpHeaders(),$response->getHeaders()['Authorization']));
-      $bearer = $response->getHeaders()['Authorization'][0];
-      return ['Authorization' => $bearer];
-    $body = $response->getBody();
-    return json_decode($body,true)['_embedded']['collections'];
-    return $this
-      ->getResponseDecoderFactory()
-      ->getDecoder($this->configuration['response_format'])
-      ->decode($body);
-  }
+//  public function authenticate() {
+//      $response = $this->httpClient->request(
+//      'POST',
+//      'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
+//      [
+//        'headers' => $this->getHttpHeaders(),
+//        'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
+//      ]
+//    );
+//      return $response->getHeaders()['Authorization'][0];
+//      //$this->setHttpHeaders(array_merge($this->getHttpHeaders(),$response->getHeaders()['Authorization']));
+//      $bearer = $response->getHeaders()['Authorization'][0];
+//      return ['Authorization' => $bearer];
+//    $body = $response->getBody();
+//    return json_decode($body,true)['_embedded']['collections'];
+//    return $this
+//      ->getResponseDecoderFactory()
+//      ->getDecoder($this->configuration['response_format'])
+//      ->decode($body);
+//  }
 }

@@ -52,7 +52,7 @@ abstract class DspaceEntityStorageClientBase extends PluginBase implements Dspac
    *   The response decoder factory service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TranslationInterface $string_translation, ResponseDecoderFactoryInterface $response_decoder_factory) {
-    $configuration += $this->defaultConfiguration();
+      $configuration += $this->defaultConfiguration();
     if (!empty($configuration['_dspace_entity_type']) && $configuration['_dspace_entity_type'] instanceof DspaceEntityTypeInterface) {
       $this->DspaceEntityType = $configuration['_dspace_entity_type'];
       unset($configuration['_dspace_entity_type']);

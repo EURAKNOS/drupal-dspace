@@ -11,6 +11,9 @@
             "role": "dev"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "require": [
+        "easyrdf/easyrdf"
+    ]
 }
 

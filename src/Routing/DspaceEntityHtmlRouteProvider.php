@@ -42,7 +42,7 @@ class DspaceEntityHtmlRouteProvider extends DefaultHtmlRouteProvider {
           '_title_context' => $label->getOption('context'),
         ])
         ->setRequirement('_permission', "view {$entity_type->id()} Dspace entity collection");
-
+        
       return $route;
     }
 

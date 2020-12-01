@@ -69,6 +69,8 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
+    
+    
     return $fields;
   }
 
@@ -78,10 +80,13 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
 
+    
+    
     /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type */
     $dspace_entity_type = \Drupal::entityTypeManager()
       ->getStorage('dspace_entity_type')
       ->load($entity_type->id());
+    $fields = array_merge($fields, $dspace_entity_type->baseFieldDefinitions($entity_type->id()));
     if ($dspace_entity_type && $dspace_entity_type->isAnnotatable()) {
       // Add the annotation reference field.
       $fields[DspaceEntityInterface::ANNOTATION_FIELD] = BaseFieldDefinition::create('entity_reference')
@@ -125,6 +130,9 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
       }
     }
 
+    
+    
+    
     return $fields;
   }
 

@@ -5,6 +5,7 @@ namespace Drupal\drupal_dspace\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\drupal_dspace\DspaceEntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the dspace_entity_type entity.
@@ -63,7 +64,29 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    * @var string
    */
   protected $description;
-
+  
+  /**
+   * The Dspace entity type prefix.
+   *
+   * @var string
+   */
+  protected $prefix;
+  
+  /**
+   * The Dspace entity type namespace.
+   *
+   * @var string
+   */
+  protected $namespace;
+  
+ 
+  /**
+   * The Dspace entity type link.
+   *
+   * @var string
+   */
+  protected $link;
+  
   /**
    * Whether or not entity types of this Dspace entity type are read only.
    *
@@ -76,7 +99,7 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    *
    * @var array
    */
-  protected $field_mappings = [];
+  protected $field_mappings;
 
   /**
    * The ID of the storage client plugin.
@@ -143,6 +166,9 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    */
   protected $inherits_annotation_fields = FALSE;
 
+  
+  
+  
   /**
    * {@inheritdoc}
    */
@@ -161,9 +187,31 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    * {@inheritdoc}
    */
   public function getDescription() {
+      
     return $this->description;
   }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getPrefix() {
+    return $this->prefix;
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getNamespace() {
+    return $this->namespace;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getLink() {
+    return $this->link;
+  }
+  
   /**
    * {@inheritdoc}
    */
@@ -176,6 +224,50 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    */
   public function getFieldMappings() {
     return $this->field_mappings;
+  }
+  
+  public static function baseFieldDefinitions($entity_type_id) {
+      $fields = [];
+      
+      $entity_type = \Drupal::entityTypeManager()
+              ->getStorage('dspace_entity_type')
+              ->load($entity_type_id);
+//        ->getDefinition($entity_type_id);
+     
+      \EasyRdf\RdfNamespace::set($entity_type->getPrefix(), $entity_type->getNamespace());
+      
+      $namespace = $entity_type->getNamespace();
+      $foaf = new \EasyRdf\Graph($namespace);
+      $foaf->load();
+//      $me = $foaf->primaryTopic();
+
+      
+      foreach($foaf->resources() as $namespace => $resource) {
+          
+          if($resource->isA('rdfs:Property')) {
+//              $resource->load();
+              $fields[$resource->shorten()] = BaseFieldDefinition::create("string")
+                ->setLabel(t($resource->label()))
+                ->setDescription(t($resource->getLiteral('rdfs:comment')->getValue()))
+//                ->setSettings(["max_length" => 255, "text_processing" => 0])
+//                ->setDefaultValue("")
+//                ->setDisplayOptions("view", ["label" => "above", "type" => "string", "wegith" => -3])
+//                ->setDisplayOptions("form", ["type" => "string_textfield", "wegith" => -3])
+                      ;
+
+          }
+          
+//          print($resource->localName() . ', ' . print_r($resource->types(), true)."\n");
+      }
+//   $fields['test'] = BaseFieldDefinition::create("string")
+//                ->setLabel(t('test'))
+//                ->setDescription(t('test'))
+////                ->setSettings(["max_length" => 255, "text_processing" => 0])
+////                ->setDefaultValue("")
+////                ->setDisplayOptions("view", ["label" => "above", "type" => "string", "wegith" => -3])
+////                ->setDisplayOptions("form", ["type" => "string_textfield", "wegith" => -3])
+//                      ;
+      return $fields;
   }
 
   /**
@@ -206,6 +298,7 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
    * {@inheritdoc}
    */
   public function getStorageClientId() {
+      return 'dspace_rest_storage_client';
     return $this->storage_client_id;
   }
 

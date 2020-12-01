@@ -100,7 +100,10 @@ implements DspaceConfigEntityStorageInterface
    */
   protected $storageClient;
   
+//  protected $storage_client_id='dspace_rest_storage_client';
   protected $storage_client_id='dspace_rest_type_storage_client';
+
+
   
   /**
    * Static cache of entities, keyed first by entity ID, then by an extra key.
@@ -257,13 +260,23 @@ implements DspaceConfigEntityStorageInterface
     $values = [];
     foreach ($data as $id => $raw_data) {
       $values[$id] = [
-          'id' => substr($raw_data['id'],0,8),
-          'label' => $raw_data['name'],
-          'label_plural' => $raw_data['name'],
-          'description' => $raw_data['name'],
+          'id' => 
+          'dspace' 
+              . '_' . $raw_data['prefix'] 
+              . '_' . $raw_data['id']
+              ,
+          'label' => $raw_data['prefix'],
+          'label_plural' => $raw_data['prefix'],
+//          'description' => $raw_data['namespace'],
+          'prefix' => $raw_data['prefix'],
+          'namespace' => $raw_data['namespace'],
+          'link' => $raw_data['_links']['href'],
           'read_only' => true,
       ];
 
+      
+      
+      
 //      foreach ($this->getDspaceEntityType()->getFieldMappings() as $field_name => $properties) {
 ////        $field_definition = $field_definitions[$field_name];
 //        $field_values = [];
@@ -348,6 +361,7 @@ implements DspaceConfigEntityStorageInterface
 //        }
 //      }
     }
+    
 
     $entities = [];
     foreach ($values as $id => $entity_values) {

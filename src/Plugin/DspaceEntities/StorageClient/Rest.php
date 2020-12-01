@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * dspace entities storage client based on a REST API.
  *
  * @DspaceEntityStorageClient(
- *   id = "dspace_rest_type_storage_client",
+ *   id = "dspace_rest_storage_client",
  *   label = @Translation("REST"),
  *   description = @Translation("Retrieves dspace entities from a REST API.")
  * )
@@ -72,8 +72,10 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
    */
   public function defaultConfiguration() {
     return [
-      'endpoint' => NULL,
-      'response_format' => NULL,
+//      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/metadataschemas?size=1000",
+//      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/collection",
+      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/items",
+      'response_format' => 'Json',
       'pager' => [
         'default_limit' => 20,
         'page_parameter' => NULL,
@@ -253,21 +255,68 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     );
   }
 
+  
+  
   /**
    * {@inheritdoc}
    */
   public function loadMultiple(array $ids = NULL) {
     $data = [];
+    $response = $this->httpClient->request(
+      'GET',
+      $this->configuration['endpoint'],
+      [
+        'headers' => array_merge($this->getHttpHeaders(), ['Authorization' => $this->authenticate()]),
+        'query' => $this->getSingleQueryParameters($ids),
+      ]
+    );
+    $body = $response->getBody();
 
-    if (!empty($ids) && is_array($ids)) {
-      foreach ($ids as $id) {
-        $data[$id] = $this->load($id);
-      }
+    $decoded = json_decode($body,true);
+    $data = $decoded['_embedded']['items'];
+    if(isset($decoded['page']) && isset($decoded['page']['totalPages'])) {
+        for($i=1; $i<$decoded['page']['totalPages']; $i++) {
+            $response = $this->httpClient->request(
+                'GET',
+                $this->configuration['endpoint'],
+                [
+//                  'headers' => array_merge($this->getHttpHeaders(), $this->authenticate()),
+                  'headers' => array_merge($this->getHttpHeaders(), ['Authorization' => $this->authenticate()]),
+                  'query' => $this->getSingleQueryParameters(['page' => $i]),
+                ]
+              );
+              $body = $response->getBody();
+            $data=$data+json_decode($body,true)['_embedded']['items'];
+        }
     }
-
+    
+//    if(is_array($ids)) {
+//        array_filter(
+//                $data, 
+//                function($item) use ($ids) {
+//                    return in_array(substr($item['id'],0,8),$ids)?true:false;
+//                }
+//            );
+//    }
     return $data;
+    
+    return json_decode($body,true)['_embedded']['metadataschemas'];
+    return $this
+      ->getResponseDecoderFactory()
+      ->getDecoder($this->configuration['response_format'])
+      ->decode($body);
+    
+    
+    
+//    if (!empty($ids) && is_array($ids)) {
+//      foreach ($ids as $id) {
+//        $data[$id] = $this->load($id);
+//      }
+//    }
+//
+//    return $data;
   }
-
+  
   /**
    * Loads one entity.
    *
@@ -335,18 +384,12 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
       'GET',
       $this->configuration['endpoint'],
       [
-        'headers' => $this->getHttpHeaders(),
+        'headers' => array_merge($this->getHttpHeaders(), ['Authorization' => $this->authenticate()]),
         'query' => $this->getListQueryParameters($parameters, $start, $length),
       ]
     );
-
     $body = $response->getBody() . '';
     
-//    $results = $this
-//      ->getResponseDecoderFactory()
-//      ->getDecoder($this->configuration['response_format'])
-//      ->decode($body);
-
     $results = json_decode($body, true);
     
     return $results;
@@ -462,4 +505,24 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     return $headers;
   }
 
+  public function authenticate() {
+      $response = $this->httpClient->request(
+      'POST',
+      'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
+      [
+        'headers' => $this->getHttpHeaders(),
+        'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
+      ]
+    );
+      return $response->getHeaders()['Authorization'][0];
+      //$this->setHttpHeaders(array_merge($this->getHttpHeaders(),$response->getHeaders()['Authorization']));
+      $bearer = $response->getHeaders()['Authorization'][0];
+      return ['Authorization' => $bearer];
+    $body = $response->getBody();
+    return json_decode($body,true)['_embedded']['collections'];
+    return $this
+      ->getResponseDecoderFactory()
+      ->getDecoder($this->configuration['response_format'])
+      ->decode($body);
+  }
 }
