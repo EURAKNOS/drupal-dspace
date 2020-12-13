@@ -123,6 +123,11 @@ implements DspaceConfigEntityStorageInterface
    */
   protected $overrideFree = FALSE;
 
+  
+  protected $storageClientPlugin;
+  
+  protected $storage_client_config;
+  
   /**
    * Constructs a ConfigEntityStorage object.
    *
@@ -261,7 +266,7 @@ implements DspaceConfigEntityStorageInterface
     foreach ($data as $id => $raw_data) {
       $values[$id] = [
           'id' => 
-          'dspace' 
+              'dspace' 
               . '_' . $raw_data['prefix'] 
               . '_' . $raw_data['id']
               ,
@@ -270,7 +275,7 @@ implements DspaceConfigEntityStorageInterface
 //          'description' => $raw_data['namespace'],
           'prefix' => $raw_data['prefix'],
           'namespace' => $raw_data['namespace'],
-          'link' => $raw_data['_links']['href'],
+//          'link' => $raw_data['_links']['href'],
           'read_only' => true,
       ];
 

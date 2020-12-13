@@ -59,8 +59,8 @@ class RestTypes extends Rest  {
       'GET',
       $this->configuration['endpoint'],
       [
-        'headers' => array_merge($this->getHttpHeaders(), $this->authenticate()),
-        'query' => $this->getSingleQueryParameters($id),
+        'headers' => array_merge($this->getHttpHeaders(), ['Authorization' => $this->authenticate()]),
+        'query' => $this->getSingleQueryParameters($ids),
       ]
     );
     $body = $response->getBody();
