@@ -22,6 +22,14 @@ entity.dspace_entity_type.edit_form:
   requirements:
     _permission: 'administer Dspace entity types'
 
+entity.dspace_entity_type.display:
+  path: '/admin/structure/dspace-entity-types/manage/{dspace_entity_type}/display'
+  defaults:
+    _entity_form: 'entity_view_display.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  requirements:
+    _permission: 'administer Dspace entity type display'
+
 entity.dspace_entity_type.delete_form:
   path: '/admin/structure/dspace-entity-types/{dspace_entity_type}/delete'
   defaults:

@@ -123,30 +123,62 @@ function drupal_dspace_entity_type_build(array &$entity_types) {
  */
 function drupal_dspace_entity_operation(EntityInterface $entity) {
   $operations = [];
+  
+  
+//  if (!$entity_route = $collection->get($route_name)) {
+//          continue;
+//        }
+//        $path = $entity_route->getPath();
 
+        $options = [];//$entity_route->getOptions();
+//        if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
+//          $options['parameters'][$bundle_entity_type] = [
+//            'type' => 'entity:' . $bundle_entity_type,
+//          ];
+//        }
+//        die(print_r($entity->getEntityType()));
+        
+        $options['bundle'] = $entity->bundle();
+        $options['targetEntityType'] = $entity->getDerivedEntityType();//$entity->getEntityType();
+        // Special parameter used to easily recognize all Field UI routes.
+        $options['_field_ui'] = TRUE;
+
+//        $defaults = [
+//          'entity_type_id' => $entity_type_id,
+//        ];
+
+        
+//        $route_name = $entity->getDerivedEntityType()->get('field_ui_base_route');
+//                die($route_name);
   if ($entity instanceof DspaceEntityTypeInterface && \Drupal::service('module_handler')->moduleExists('field_ui')) {
     /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
     $derived_entity_type = $entity->getDerivedEntityType();
     $account = \Drupal::currentUser();
-    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' fields')) {
-      $operations['manage-fields'] = [
-        'title' => t('Manage fields'),
-        'weight' => 15,
-        'url' => Url::fromRoute("entity.{$derived_entity_type->id()}.field_ui_fields"),
-      ];
-    }
-    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' form display')) {
-      $operations['manage-form-display'] = [
-        'title' => t('Manage form display'),
-        'weight' => 20,
-        'url' => Url::fromRoute("entity.entity_form_display.{$derived_entity_type->id()}.default"),
-      ];
-    }
+//    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' fields')) {
+//      $operations['manage-fields'] = [
+//        'title' => t('Manage fields'),
+//        'weight' => 15,
+//          'url' => Url::fromRoute('entity.dspace_entity_type.edit_form', ['dspace_entity_type'=> $derived_entity_type->id()])
+////        'url' => Url::fromRoute("entity.{$derived_entity_type->id()}.field_ui_fields"),
+////        'url' => 'Url::fromRoute("entity.{$derived_entity_type->id()}.field_ui_fields")',
+//      ];
+//    }
+    
+    
+//    if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' form display')) {
+//      $operations['manage-form-display'] = [
+//        'title' => t('Manage form display'),
+//        'weight' => 20,
+//        'url' => Url::fromRoute("entity.entity_form_display",['dspace_entity_type' => $derived_entity_type->id()]),
+////        'url' => 'Url::fromRoute("entity.entity_form_display.{$derived_entity_type->id()}.default")',
+//      ];
+//    }
     if ($account->hasPermission('administer ' . $derived_entity_type->id() . ' display')) {
       $operations['manage-display'] = [
         'title' => t('Manage display'),
         'weight' => 25,
-        'url' => Url::fromRoute("entity.entity_view_display.{$derived_entity_type->id()}.default"),
+        'url' => Url::fromRoute("entity.dspace_entity_type.display",['dspace_entity_type'=>$derived_entity_type->id()]),
+//        'url' => 'Url::fromRoute("entity.entity_view_display.{$derived_entity_type->id()}.default")',
       ];
     }
   }
