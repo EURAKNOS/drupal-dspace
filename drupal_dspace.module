@@ -139,7 +139,7 @@ function drupal_dspace_entity_operation(EntityInterface $entity) {
 //        die(print_r($entity->getEntityType()));
         
         $options['bundle'] = $entity->bundle();
-        $options['targetEntityType'] = $entity->getDerivedEntityType();//$entity->getEntityType();
+        $options['targetEntityType'] = $entity->getEntityType();//$entity->getDerivedEntityType();//$entity->getEntityType();
         // Special parameter used to easily recognize all Field UI routes.
         $options['_field_ui'] = TRUE;
 
