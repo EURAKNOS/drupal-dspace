@@ -262,6 +262,7 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
    */
   public function loadMultiple(array $ids = NULL) {
     $data = [];
+    try {
     $response = $this->httpClient->request(
       'GET',
       $this->configuration['endpoint'],
@@ -298,6 +299,10 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
 //                }
 //            );
 //    }
+    }
+    catch(GuzzleHttp\Exception\ServerException | GuzzleHttp\Exception\ConnectException $e) {
+        
+    }
     return $data;
     
     return json_decode($body,true)['_embedded']['metadataschemas'];
@@ -507,13 +512,13 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
 
   public function authenticate() {
       $response = $this->httpClient->request(
-      'POST',
-      'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
-      [
-        'headers' => $this->getHttpHeaders(),
-        'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
-      ]
-    );
+        'POST',
+        'http://api.dspace.poc.euraknos.cf/server/api/authn/login',
+        [
+          'headers' => $this->getHttpHeaders(),
+          'form_params' => ['user'=>'admin@euraknos.cf','password'=>'euraknos4567'],
+        ]
+      );
       return $response->getHeaders()['Authorization'][0];
       //$this->setHttpHeaders(array_merge($this->getHttpHeaders(),$response->getHeaders()['Authorization']));
       $bearer = $response->getHeaders()['Authorization'][0];

@@ -7,8 +7,14 @@
 namespace Drupal\drupal_dspace;
 
 use Drupal\Core\Entity\ContentEntityStorageBase;
+use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
+use Drupal\Core\Entity\EntityBundleListenerInterface;
 
-class DspaceContentEntityStorage extends ContentEntityStorageBase implements DynamicallyFieldableEntityStorageSchemaInterface, EntityBundleListenerInterface {
+class DspaceContentEntityStorage extends ContentEntityStorageBase 
+//implements 
+//DynamicallyFieldableEntityStorageSchemaInterface, 
+//        EntityBundleListenerInterface 
+        {
 
   /**
    * {@inheritdoc}

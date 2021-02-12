@@ -136,7 +136,6 @@ function drupal_dspace_entity_operation(EntityInterface $entity) {
 //            'type' => 'entity:' . $bundle_entity_type,
 //          ];
 //        }
-//        die(print_r($entity->getEntityType()));
         
         $options['bundle'] = $entity->bundle();
         $options['targetEntityType'] = $entity->getEntityType();//$entity->getDerivedEntityType();//$entity->getEntityType();
@@ -149,7 +148,6 @@ function drupal_dspace_entity_operation(EntityInterface $entity) {
 
         
 //        $route_name = $entity->getDerivedEntityType()->get('field_ui_base_route');
-//                die($route_name);
   if ($entity instanceof DspaceEntityTypeInterface && \Drupal::service('module_handler')->moduleExists('field_ui')) {
     /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $entity */
     $derived_entity_type = $entity->getDerivedEntityType();

@@ -55,6 +55,7 @@ class RestTypes extends Rest  {
    */
   public function loadMultiple(array $ids = NULL) {
     $data = [];
+    try {
     $response = $this->httpClient->request(
       'GET',
       $this->configuration['endpoint'],
@@ -92,6 +93,10 @@ class RestTypes extends Rest  {
 //                }
 //            );
 //    }
+    }
+    catch(GuzzleHttp\Exception\ServerException | GuzzleHttp\Exception\ConnectException $e) {
+        
+    }
     return $data;
     
     return json_decode($body,true)['_embedded']['metadataschemas'];

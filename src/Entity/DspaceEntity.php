@@ -17,6 +17,15 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  * Defines the Dspace entity class.
  *
  * @see drupal_dspace_entity_type_build()
+ * 
+ * @ContentEntityType(
+ *   handlers = {
+ *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
+ *   },
+ *   translatable = TRUE,
+ *   common_reference_target = TRUE
+ * )
+ * 
  */
 class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
 

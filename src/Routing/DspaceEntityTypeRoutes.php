@@ -50,6 +50,7 @@ class DspaceEntityTypeRoutes implements ContainerInjectionInterface {
 
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->getProvider() === 'drupal_dspace') {
+          
 //        // Edit page.
 //        $route = new Route('/admin/structure/dspace-entity-types/' . $entity_type_id);
 //        $route->setDefault('_entity_form', 'dspace_entity_type.edit');
