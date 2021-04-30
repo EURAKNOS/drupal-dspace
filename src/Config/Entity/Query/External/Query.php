@@ -97,8 +97,9 @@ class Query extends QueryBase implements QueryInterface {
     $length = $this->range['length'] ?? NULL;
     $query_results = $this->getStorageClient()->query($this->parameters, $this->sort, $start, $length);
     $result = [];
-    foreach ($query_results as $query_result) {
-      $id = $query_result[$this->getDspaceEntityType()->getFieldMapping('id', 'value')];
+    foreach ($query_results['_embedded']['items'] as $query_result) {
+            $id = $query_result['id'];
+
       $result[$id] = $id;
     }
 

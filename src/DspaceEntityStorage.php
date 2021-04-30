@@ -440,12 +440,14 @@ class DspaceEntityStorage extends ContentEntityStorageBase implements DspaceEnti
 
     $entities = [];
     foreach ($values as $id => $entity_values) {
+        if(is_array($entities[$id])) {
       // Allow other modules to perform custom mapping logic.
       $event = new DspaceEntityMapRawDataEvent($data[$id], $entity_values);
       $this->eventDispatcher->dispatch(DspaceEntitiesEvents::MAP_RAW_DATA, $event);
-
-      $entities[$id] = new $this->entityClass($event->getEntityValues(), $this->entityTypeId);
-      $entities[$id]->enforceIsNew(FALSE);
+      
+        $entities[$id] = new $this->entityClass($event->getEntityValues(), $this->entityTypeId);
+        $entities[$id]->enforceIsNew(FALSE);
+      }
     }
 
     return $entities;

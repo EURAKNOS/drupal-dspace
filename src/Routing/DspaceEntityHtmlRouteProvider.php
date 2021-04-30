@@ -40,6 +40,7 @@ class DspaceEntityHtmlRouteProvider extends DefaultHtmlRouteProvider {
           '_title' => $label->getUntranslatedString(),
           '_title_arguments' => $label->getArguments(),
           '_title_context' => $label->getOption('context'),
+          '_entity' => $entity_type->id(),
         ])
         ->setRequirement('_permission', "view {$entity_type->id()} Dspace entity collection");
         
@@ -48,5 +49,14 @@ class DspaceEntityHtmlRouteProvider extends DefaultHtmlRouteProvider {
 
     return NULL;
   }
+  
+//  protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
+//      $result = parent::getCanonicalRoute($entity_type);
+//      $options = $result->getOptions();
+//      $options['parameters'][$entity_type->id()]['entity']=$entity_type->id();
+//      $result->setOptions($options);
+//      $result->entity=$entity_type;
+//      return $result;
+//  }
 
 }

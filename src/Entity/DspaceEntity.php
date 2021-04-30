@@ -22,7 +22,12 @@ use Drupal\drupal_dspace\DspaceEntityTypeInterface;
  *   handlers = {
  *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
  *   },
- *   translatable = TRUE,
+ *   entity_keys = {
+ *     "id" = "id",
+ *     "uuid" = "uuid",
+ *     "entity" = "entity"
+ *   },
+ *   translatable = FALSE,
  *   common_reference_target = TRUE
  * )
  * 
@@ -64,6 +69,10 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
       ->setLabel(new TranslatableMarkup('UUID'))
       ->setReadOnly(TRUE);
 
+    $fields['langcode'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Langcode'))
+      ->setReadOnly(TRUE);
+    
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Title'))
       ->setRequired(TRUE)
@@ -88,8 +97,7 @@ class DspaceEntity extends ContentEntityBase implements DspaceEntityInterface {
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
-
-    
+ 
     
     /* @var \Drupal\drupal_dspace\DspaceEntityTypeInterface $dspace_entity_type */
     $dspace_entity_type = \Drupal::entityTypeManager()

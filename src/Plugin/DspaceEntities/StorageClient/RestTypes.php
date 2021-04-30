@@ -29,6 +29,7 @@ class RestTypes extends Rest  {
     return [
       'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/metadataschemas?size=1000",
 //      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/collection",
+//      'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/items",
       'response_format' => 'Json',
       'pager' => [
         'default_limit' => 20,

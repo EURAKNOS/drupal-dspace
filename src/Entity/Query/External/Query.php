@@ -101,11 +101,12 @@ class Query extends QueryBase implements QueryInterface {
             ->query($this->parameters, $this->sort, $start, $length);
     
     $result = [];
-    foreach ($query_results as $query_result) {
-      $id = $query_result[$this->getDspaceEntityType()->getFieldMapping('id', 'value')];
-      $result[$id] = $id;
+    foreach ($query_results['_embedded']['items'] as $query_result) {
+//      $id = $query_result[$this->getDspaceEntityType()->getFieldMapping('id', 'value')];
+//      $result[$id] = $id;
+     
+      $result[$query_result['id']] = $query_result['id'];
     }
-
     return $result;
   }
 

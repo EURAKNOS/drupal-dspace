@@ -31,6 +31,9 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
    * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
+  
+  
+  protected $entityClass = "\Drupal\drupal_dspace\Entity\DspaceEntity";
 
   /**
    * Constructs a Rest object.
@@ -77,7 +80,7 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
       'endpoint' => "http://api.dspace.poc.euraknos.cf/server/api/core/items",
       'response_format' => 'Json',
       'pager' => [
-        'default_limit' => 20,
+        'default_limit' => 200,
         'page_parameter' => NULL,
         'page_parameter_type' => NULL,
         'page_size_parameter' => NULL,
@@ -303,23 +306,23 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     catch(GuzzleHttp\Exception\ServerException | GuzzleHttp\Exception\ConnectException $e) {
         
     }
-    return $data;
-    
-    return json_decode($body,true)['_embedded']['metadataschemas'];
-    return $this
-      ->getResponseDecoderFactory()
-      ->getDecoder($this->configuration['response_format'])
-      ->decode($body);
-    
-    
-    
-//    if (!empty($ids) && is_array($ids)) {
-//      foreach ($ids as $id) {
-//        $data[$id] = $this->load($id);
-//      }
-//    }
-//
 //    return $data;
+//    
+//    return json_decode($body,true)['_embedded']['metadataschemas'];
+//    return $this
+//      ->getResponseDecoderFactory()
+//      ->getDecoder($this->configuration['response_format'])
+//      ->decode($body);
+    
+    
+    
+    if (!empty($ids) && is_array($ids)) {
+      foreach ($ids as $id) {
+        $data[$id] = $this->load($id);
+      }
+    }
+
+    return $data;
   }
   
   /**
@@ -344,6 +347,11 @@ class Rest extends DspaceEntityStorageClientBase implements PluginFormInterface 
     );
 
     $body = $response->getBody();
+    
+    $decoded = json_decode($body,true);
+    $this->entityTypeId = $this->DspaceEntityType->id();
+    $entity = new $this->entityClass($decoded, $this->entityTypeId);
+    return $entity;
     
     return $this
       ->getResponseDecoderFactory()

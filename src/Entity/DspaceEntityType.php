@@ -80,6 +80,8 @@ class DspaceEntityType extends ConfigEntityBase implements DspaceEntityTypeInter
   protected $namespace;
   
  
+  protected $langcode;
+  
   /**
    * The Dspace entity type link.
    *

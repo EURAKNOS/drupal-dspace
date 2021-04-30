@@ -23,7 +23,7 @@ class DspaceEntityListBuilder extends EntityListBuilder {
     $ids = $entity_query->execute();
 
     
-    return $this->storage->loadMultiple(null);
+    return $this->storage->loadMultiple($ids);
   }
 
   /**
